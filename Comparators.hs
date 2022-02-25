@@ -1,6 +1,7 @@
 module Comparators where
 import Data.List
 
+-- Call comparator for part 3
 comparator :: Ord a => [(Int,Int)] -> [a] -> [a]
 comparator [] l = l
 comparator ((x,y):xs) l =
@@ -20,6 +21,7 @@ tupleToList ((x,y):xs) = x : y : tupleToList xs
 checkSort :: Ord a => [(Int,Int)] -> [[a]] -> [Bool]
 checkSort l = map (\ x -> comparator l x == sort x)
 
+-- Call isSortingNetwork for part 5
 isSortingNetwork :: [(Int,Int)] -> Bool
 isSortingNetwork l =
     let xs = [1..(maximum (tupleToList l))]
