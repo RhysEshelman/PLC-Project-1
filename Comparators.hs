@@ -23,9 +23,11 @@ checkSort l = map (\ x -> comparator l x == sort x)
 
 -- Call isSortingNetwork for part 5
 isSortingNetwork :: [(Int,Int)] -> Bool
-isSortingNetwork l =
-    let xs = [1..(maximum (tupleToList l))]
-    in all (==True) (checkSort l (permutations xs))
+isSortingNetwork l
+    | null l = True
+    | otherwise =
+        let xs = [1..(maximum (tupleToList l))]
+        in all (==True) (checkSort l (permutations xs))
 
 addLayer :: Int -> Int -> [(Int,Int)]
 addLayer i j =
@@ -47,4 +49,7 @@ goingDown m
 
 -- Call computeNetwork along with whatever we used for parallelism in part 4 for part 6
 computeNetwork :: Int -> [(Int,Int)]
-computeNetwork = goingUp 1
+computeNetwork n
+    | n <= 1 = []
+    | n == 2 = [(1,2)]
+    | otherwise = goingUp 1 n
