@@ -26,3 +26,25 @@ isSortingNetwork :: [(Int,Int)] -> Bool
 isSortingNetwork l =
     let xs = [1..(maximum (tupleToList l))]
     in all (==True) (checkSort l (permutations xs))
+
+addLayer :: Int -> Int -> [(Int,Int)]
+addLayer i j =
+    if i == j then [(i,i+1)]
+    else (j,j+1):addLayer i (j+2)
+
+goingUp :: Int -> Int -> [(Int, Int)]
+goingUp m n
+    | m == n-1 && mod m 2 == 1 = addLayer m 1 ++ goingDown (n-2)
+    | m == n-1 && even m = addLayer m 2 ++ goingDown (n-2)
+    | mod m 2 == 1 = addLayer m 1 ++ goingUp (m+1) n
+    | otherwise = addLayer m 2 ++ goingUp(m+1) n
+
+goingDown :: Int -> [(Int,Int)]
+goingDown m
+    | m == 1 = addLayer 1 1
+    | mod m 2 == 1 = addLayer m 1 ++ goingDown (m-1)
+    | otherwise = addLayer m 2 ++ goingDown (m-1)
+
+-- Call computeNetwork along with whatever we used for parallelism in part 4 for part 6
+computeNetwork :: Int -> [(Int,Int)]
+computeNetwork = goingUp 1
