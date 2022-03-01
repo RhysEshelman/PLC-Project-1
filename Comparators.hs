@@ -1,5 +1,6 @@
 module Comparators where
 import Data.List
+import Data.Function
 
 -- Call comparator for part 3
 comparator :: Ord a => [(Int,Int)] -> [a] -> [a]
@@ -17,6 +18,30 @@ comparator ((x,y):xs) l =
 tupleToList :: [(a,a)] -> [a]
 tupleToList [] = []
 tupleToList ((x,y):xs) = x : y : tupleToList xs
+
+tupleSort :: Ord a => [(a,a)] -> [(a,a)]
+tupleSort = sortBy (compare `on` fst)
+
+newLine :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)]
+newLine [] l = tupleSort l
+newLine ((x,y):xs) [] = newLine xs [(x,y)]
+newLine ((x,y):xs) l =
+    if notElem x (tupleToList l) && notElem y (tupleToList l)
+        then newLine xs (l ++ [(x,y)])
+    else tupleSort l
+
+leftover :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)]
+leftover [] l = []
+leftover ((x,y):xs) [] = leftover xs [(x,y)]
+leftover ((x,y):xs) l =
+    if notElem x (tupleToList l) && notElem y (tupleToList l)
+        then leftover xs (l ++ [(x,y)])
+    else (x,y):xs
+
+-- Call parallelize for part 4
+parallelize :: [(Int,Int)] -> [[(Int,Int)]]
+parallelize [] = []
+parallelize l = newLine l [] : parallelize (leftover l [])
 
 checkSort :: Ord a => [(Int,Int)] -> [[a]] -> [Bool]
 checkSort l = map (\ x -> comparator l x == sort x)
@@ -47,7 +72,7 @@ goingDown m
     | odd m = addLayer m 1 ++ goingDown (m-1)
     | otherwise = addLayer m 2 ++ goingDown (m-1)
 
--- Call computeNetwork along with whatever we used for parallelism in part 4 for part 6
+-- Call parallelize computeNetwork {input} for part 6
 computeNetwork :: Int -> [(Int,Int)]
 computeNetwork n
     | n <= 1 = []
