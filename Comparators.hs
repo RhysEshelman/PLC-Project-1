@@ -72,7 +72,7 @@ goingDown m
     | odd m = addLayer m 1 ++ goingDown (m-1)
     | otherwise = addLayer m 2 ++ goingDown (m-1)
 
--- Call parallelize computeNetwork {input} for part 6
+-- Call parallelize (computeNetwork {input}) for part 6
 computeNetwork :: Int -> [(Int,Int)]
 computeNetwork n
     | n <= 1 = []
