@@ -1,6 +1,7 @@
 module Main where
 
 import Functions
+import Comparators
 import Data.List
 import System.Environment
 
@@ -22,12 +23,21 @@ main =
               do
                 net <- readFile $ head args
                 let network = read net :: [(Int,Int)]
-                seq <- read head $ tail args
-                putStrLn $ runNetwork network seq
+                let seq = read (head $ tail args) :: [Int]
+                putStrLn $ show $ comparator network seq
             "Parallel" ->
               do
                 inps <- readFile $ head args
                 let l = read inps :: [[(Int,Int)]]
                 writeFile "parallel.txt" (par_format l)
-            "Sorting" -> putStrLn "Unimplemented"
-            "Create" -> putStrLn "Unimplemented"
+            "Sorting" -> 
+              do
+                inps <- readFile $ head args
+                let network = read inps :: [(Int,Int)]
+                putStrLn $ show $ isSortingNetwork network
+            "Create" -> 
+              do
+                let n = read (head args) :: Int
+                let network = computeNetwork n
+                putStrLn "Unfinished"
+                -- writeFile "parallel.txt" (par_format network)
