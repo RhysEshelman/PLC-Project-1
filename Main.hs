@@ -18,7 +18,7 @@ main =
               do
                 inps <- readFile $ head args
                 let l = read inps :: [(Int,Int)]
-                writeFile "network.txt" (net_format l)
+                writeFile "network.txt" ((net_format l) ++ "\n")
             "Run" -> 
               do
                 net <- readFile $ head args
@@ -28,8 +28,8 @@ main =
             "Parallel" ->
               do
                 inps <- readFile $ head args
-                let l = read inps :: [[(Int,Int)]]
-                writeFile "parallel.txt" (par_format l)
+                let l = read inps :: [(Int,Int)]
+                writeFile "parallel.txt" ((par_format (parallelize l)) ++ "\n")
             "Sorting" -> 
               do
                 inps <- readFile $ head args
@@ -39,5 +39,4 @@ main =
               do
                 let n = read (head args) :: Int
                 let network = computeNetwork n
-                putStrLn "Unfinished"
-                -- writeFile "parallel.txt" (par_format network)
+                writeFile "parallel.txt" ((par_format (parallelize network)) ++ "\n")
