@@ -2,7 +2,7 @@ module Comparators where
 import Data.List
 import Data.Function
 
--- Call comparator for part 3
+-- Call comparator {input} for part 3
 comparator :: Ord a => [(Int,Int)] -> [a] -> [a]
 comparator [] l = l
 comparator ((x,y):xs) l =
@@ -38,7 +38,7 @@ leftover ((x,y):xs) l =
         then leftover xs (l ++ [(x,y)])
     else (x,y):xs
 
--- Call parallelize for part 4
+-- Call parallelize {input} for part 4
 parallelize :: [(Int,Int)] -> [[(Int,Int)]]
 parallelize [] = []
 parallelize l = newLine l [] : parallelize (leftover l [])
@@ -46,7 +46,7 @@ parallelize l = newLine l [] : parallelize (leftover l [])
 checkSort :: Ord a => [(Int,Int)] -> [[a]] -> [Bool]
 checkSort l = map (\ x -> comparator l x == sort x)
 
--- Call isSortingNetwork for part 5
+-- Call isSortingNetwork {input} for part 5
 isSortingNetwork :: [(Int,Int)] -> Bool
 isSortingNetwork l
     | null l = True
@@ -72,7 +72,7 @@ goingDown m
     | odd m = addLayer m 1 ++ goingDown (m-1)
     | otherwise = addLayer m 2 ++ goingDown (m-1)
 
--- Call parallelize computeNetwork {input} for part 6
+-- Call parallelize (computeNetwork {input}) for part 6
 computeNetwork :: Int -> [(Int,Int)]
 computeNetwork n
     | n <= 1 = []
