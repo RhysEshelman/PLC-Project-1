@@ -25,10 +25,11 @@ tupleSort = sortBy (compare `on` fst)
 newLine :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)]
 newLine [] l = tupleSort l
 newLine ((x,y):xs) [] = newLine xs [(x,y)]
-newLine ((x,y):xs) l =
-    if notElem x (tupleToList l) && notElem y (tupleToList l)
-        then newLine xs (l ++ [(x,y)])
-    else tupleSort l
+newLine ((x,y):xs) l
+    | notElem x (tupleToList l) && notElem y (tupleToList l) =
+        newLine xs (l ++ [(x,y)])
+    | length xs > 0 = newLine xs l
+    | otherwise = tupleSort l
 
 leftover :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)]
 leftover [] l = []
@@ -36,7 +37,7 @@ leftover ((x,y):xs) [] = leftover xs [(x,y)]
 leftover ((x,y):xs) l =
     if notElem x (tupleToList l) && notElem y (tupleToList l)
         then leftover xs (l ++ [(x,y)])
-    else (x,y):xs
+    else (x,y):(leftover xs l)
 
 -- Call parallelize {input} for part 4
 parallelize :: [(Int,Int)] -> [[(Int,Int)]]
