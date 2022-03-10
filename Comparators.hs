@@ -22,27 +22,27 @@ tupleToList ((x,y):xs) = x : y : tupleToList xs
 tupleSort :: Ord a => [(a,a)] -> [(a,a)]
 tupleSort = sortBy (compare `on` fst)
 
-newLine :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)]
-newLine [] l = tupleSort l
-newLine ((x,y):xs) [] = newLine xs [(x,y)]
-newLine ((x,y):xs) l
-    | notElem x (tupleToList l) && notElem y (tupleToList l) =
-        newLine xs (l ++ [(x,y)])
-    | length xs > 0 = newLine xs l
+newLine :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)] -> [(a,a)]
+newLine [] l _ = tupleSort l
+newLine ((x,y):xs) [] [] = newLine xs [(x,y)] []
+newLine ((x,y):xs) l m
+    | notElem x (tupleToList (l++m)) && notElem y (tupleToList (l++m)) =
+        newLine xs (l ++ [(x,y)]) m
+    | length xs > 0 = newLine xs l (m ++ [(x,y)])
     | otherwise = tupleSort l
 
-leftover :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)]
-leftover [] l = []
-leftover ((x,y):xs) [] = leftover xs [(x,y)]
-leftover ((x,y):xs) l =
-    if notElem x (tupleToList l) && notElem y (tupleToList l)
-        then leftover xs (l ++ [(x,y)])
-    else (x,y):(leftover xs l)
+leftover :: Ord a => [(a,a)] -> [(a,a)] -> [(a,a)] -> [(a,a)]
+leftover [] _ _ = []
+leftover ((x,y):xs) [] [] = leftover xs [(x,y)] []
+leftover ((x,y):xs) l m =
+    if notElem x (tupleToList (l++m)) && notElem y (tupleToList (l++m))
+        then leftover xs (l ++ [(x,y)]) m
+    else (x,y):(leftover xs l (m ++ [(x,y)]))
 
 -- Call parallelize {input} for part 4
 parallelize :: [(Int,Int)] -> [[(Int,Int)]]
 parallelize [] = []
-parallelize l = newLine l [] : parallelize (leftover l [])
+parallelize l = newLine l [] [] : parallelize (leftover l [] [])
 
 checkSort :: Ord a => [(Int,Int)] -> [[a]] -> [Bool]
 checkSort l = map (\ x -> comparator l x == sort x)
